@@ -98,8 +98,8 @@ namespace nick_telegram_infobot
                     // first row
                     new []
                     {
-                        InlineKeyboardButton.WithCallbackData("Погода", "11"),
-                        InlineKeyboardButton.WithCallbackData("Курс валют", "12"),
+                        InlineKeyboardButton.WithCallbackData("Погода", "Погода"),
+                        InlineKeyboardButton.WithCallbackData("Курс валют", "Курс валют"),
                     },
                     
                 });
@@ -114,10 +114,10 @@ namespace nick_telegram_infobot
         private static async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
             await Bot.AnswerCallbackQueryAsync(callbackQuery.Id,
-                                               $"Received {callbackQuery.Data}");
+                                               $"{callbackQuery.Data}");
 
             await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
-                                           $"Received {callbackQuery.Data}");
+                                           $"{callbackQuery.Data}");
         }
 
         #region Inline Mode
