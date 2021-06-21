@@ -99,7 +99,7 @@ namespace nick_telegram_infobot
                     new []
                     {
                         InlineKeyboardButton.WithCallbackData("Погода", "Погода"),
-                        InlineKeyboardButton.WithCallbackData("Курс валют", "Курс валют "),
+                        InlineKeyboardButton.WithCallbackData("Курс  валют", "Курс валют "),
                     },
                     
                 });
