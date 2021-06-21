@@ -114,10 +114,10 @@ namespace nick_telegram_infobot
         private static async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
             await Bot.AnswerCallbackQueryAsync(callbackQuery.Id,
-                                               $"{callbackQuery.Data}");
+                                               $" {callbackQuery.Data}");
 
             await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
-                                           $"{callbackQuery.Data}");
+                                           $" {callbackQuery.Data}");
         }
 
         #region Inline Mode
