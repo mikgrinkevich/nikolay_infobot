@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -16,6 +17,7 @@ namespace nick_telegram_infobot
 {
     public static class Program
     {
+        
         private static TelegramBotClient Bot;
 
         public static async Task Main()
@@ -39,6 +41,8 @@ namespace nick_telegram_infobot
 
             // Send cancellation request to stop bot
             cts.Cancel();
+
+            
         }
 
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -83,36 +87,58 @@ namespace nick_telegram_infobot
             var sentMessage = await action;
             Console.WriteLine($"The message was sent with id: {sentMessage.MessageId}");
 
+             
 
             // Send inline keyboard
             // You can process responses in BotOnCallbackQueryReceived handler
             static async Task<Message> SendInlineKeyboard(Message message)
             {
-                await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
 
-                // Simulate longer running task
-                await Task.Delay(500);
+                
+                await Bot.SendChatActionAsync(message.Chat.Id, ChatAction.Typing);
+                
+
 
                 InlineKeyboardMarkup inlineKeyboard = new(new[]
                 {
                     // first row
                     new []
                     {
-                        InlineKeyboardButton.WithCallbackData("Погода ", " Погода "),
-                        InlineKeyboardButton.WithCallbackData("Курс валют", "Курс валют "),
+                        InlineKeyboardButton.WithCallbackData("Погода ", "Погода"),
+                        InlineKeyboardButton.WithCallbackData("Курс валют", "Курс валют"),
                     },
                     
+
                 });
+
                 return await Bot.SendTextMessageAsync(chatId: message.Chat.Id,
                                                       text: "Choose",
                                                       replyMarkup: inlineKeyboard);
+                
             }
 
+        }
+
+        public class Serialization
+        {
+            public static DateTime Date { get; set; }
+            public decimal Rate { get; set; }
         }
 
         // Process Inline Keyboard callback data
         private static async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
+            HttpClient client = new HttpClient();
+            switch (callbackQuery.Data)
+            {
+                case "Курс валют":
+                    HttpResponseMessage Response = await client.GetAsync("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd/byr.json");
+                    string responseBody = await Response.Content.ReadAsStringAsync();
+                    break;
+                case "Погода":
+                    break;
+                default:
+                    break;
             await Bot.AnswerCallbackQueryAsync(callbackQuery.Id,
                                                $"{callbackQuery.Data}");
 
@@ -120,9 +146,9 @@ namespace nick_telegram_infobot
                                            $"{callbackQuery.Data}");
         }
 
-        #region Inline Mode
+            #region Inline Mode
 
-        private static async Task BotOnInlineQueryReceived(InlineQuery inlineQuery)
+            private static async Task BotOnInlineQueryReceived(InlineQuery inlineQuery)
         {
             Console.WriteLine($"Received inline query from: {inlineQuery.From.Id}");
 
