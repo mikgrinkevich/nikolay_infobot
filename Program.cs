@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -13,7 +14,7 @@ using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace nick_telegram_infobot
+namespace NikolayWeatherCurrencyBot
 {
     public static class Program
     {
@@ -22,7 +23,7 @@ namespace nick_telegram_infobot
 
         public static async Task Main()
         {
-            var botToken = "1857532449:AAFoLPR5B1ltIrsmkWEGv97PgMpE_zlOy80";
+            var botToken = "1754409193:AAGQa6jTpHOgc4NGawJPP35RewPA9U04cDw";
 
             Bot = new TelegramBotClient(botToken);
 
@@ -119,34 +120,39 @@ namespace nick_telegram_infobot
 
         }
 
-        public class Serialization
+        public class ByrRate
         {
-            public static DateTime Date { get; set; }
-            public decimal Rate { get; set; }
+            public static DateTime date { get; set; }
+            public decimal byr { get; set; }
         }
 
         // Process Inline Keyboard callback data
         private static async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
+            string BotMessage = "";
             HttpClient client = new HttpClient();
             switch (callbackQuery.Data)
             {
                 case "Курс валют":
                     HttpResponseMessage Response = await client.GetAsync("https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/usd/byr.json");
                     string responseBody = await Response.Content.ReadAsStringAsync();
+                    ByrRate byrRate = JsonSerializer.Deserialize<ByrRate>(responseBody);
+                    await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
+                                                       $"{byrRate}");
                     break;
                 case "Погода":
                     break;
                 default:
                     break;
-            await Bot.AnswerCallbackQueryAsync(callbackQuery.Id,
-                                               $"{callbackQuery.Data}");
+
+                    
+            }
 
             await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
-                                           $"{callbackQuery.Data}");
+                                                       $"{BotMessage}");
         }
 
-            #region Inline Mode
+      
 
             private static async Task BotOnInlineQueryReceived(InlineQuery inlineQuery)
         {
@@ -175,7 +181,7 @@ namespace nick_telegram_infobot
             return Task.CompletedTask;
         }
 
-        #endregion
+        
 
         private static Task UnknownUpdateHandlerAsync(Update update)
         {
