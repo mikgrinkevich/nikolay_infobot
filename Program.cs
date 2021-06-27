@@ -138,9 +138,12 @@ namespace NikolayWeatherCurrencyBot
                     string responseBody = await Response.Content.ReadAsStringAsync();
                     ByrRate byrRate = JsonSerializer.Deserialize<ByrRate>(responseBody);
                     await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
-                                                       $"{byrRate}");
+                                                       $"{byrRate.byr}");
                     break;
+
                 case "Погода":
+                    
+
                     break;
                 default:
                     break;
