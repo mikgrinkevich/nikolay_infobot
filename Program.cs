@@ -100,17 +100,17 @@ namespace NikolayWeatherCurrencyBot
                 
 
 
-                InlineKeyboardMarkup inlineKeyboard = new(new[]
-                {
+                   InlineKeyboardMarkup inlineKeyboard = new(new[]
+                   {
                     // first row
                     new []
                     {
                         InlineKeyboardButton.WithCallbackData("Погода ", "Погода"),
                         InlineKeyboardButton.WithCallbackData("Курс валют", "Курс валют"),
                     },
-                    
 
-                });
+
+                    });
 
                 return await Bot.SendTextMessageAsync(chatId: message.Chat.Id,
                                                       text: "Choose",
@@ -140,9 +140,34 @@ namespace NikolayWeatherCurrencyBot
                     await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
                                                        $"{byrRate.byr}");
                     break;
-
                 case "Погода":
-                    
+                    InlineKeyboardMarkup inlineKeyboard = new(new[]
+                {
+                    // first row
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData("Минск", "Минск"),
+                        InlineKeyboardButton.WithCallbackData("Могилев", "Могилев"),
+                    },
+
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData("Гомель", "Гомель"),
+                        InlineKeyboardButton.WithCallbackData("Гродно", "Гродно"),
+                    },
+
+                    new []
+                    {
+                        InlineKeyboardButton.WithCallbackData("Брест", "Брест"),
+                        InlineKeyboardButton.WithCallbackData("Витебск", "Витебск"),
+                    },
+
+
+                });
+
+                     await Bot.SendTextMessageAsync(chatId: callbackQuery.Message.Chat.Id,
+                                                          text: "Choose",
+                                                          replyMarkup: inlineKeyboard);
 
                     break;
                 default:
