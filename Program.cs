@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AngleSharp.Html.Parser;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,7 +15,7 @@ using Telegram.Bot.Types.InlineQueryResults;
 using Telegram.Bot.Types.InputFiles;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace NikolayWeatherCurrencyBot
+namespace nikTelegramWeather_bot
 {
     public static class Program
     {
@@ -23,7 +24,7 @@ namespace NikolayWeatherCurrencyBot
 
         public static async Task Main()
         {
-            var botToken = "1754409193:AAGQa6jTpHOgc4NGawJPP35RewPA9U04cDw";
+            var botToken = "1805969287:AAE6nE0eKMf3m7S0lLY95CnfsFkeDSmEEbQ";
 
             Bot = new TelegramBotClient(botToken);
 
@@ -130,7 +131,10 @@ namespace NikolayWeatherCurrencyBot
         private static async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
             string BotMessage = "";
+            var htmlParser = new HtmlParser();
             HttpClient client = new HttpClient();
+            
+            
             switch (callbackQuery.Data)
             {
                 case "Курс валют":
@@ -168,7 +172,54 @@ namespace NikolayWeatherCurrencyBot
                      await Bot.SendTextMessageAsync(chatId: callbackQuery.Message.Chat.Id,
                                                           text: "Choose",
                                                           replyMarkup: inlineKeyboard);
-
+                    break;
+                case "Минск":
+                    var htmlMinsk = await client.GetStringAsync("https://www.gismeteo.by/weather-minsk-4248/");
+                    var documentMinsk = await htmlParser.ParseDocumentAsync(htmlMinsk);
+                    var elementMinsk = documentMinsk.QuerySelector("body > section > div.content_wrap > div > div.main > div > div.__frame_sm > div.forecast_frame.hw_wrap > div.tabs._center > a:nth-child(1) > div > div.tab-content > div.tab-weather > div.js_meas_container.temperature.tab-weather__value > span.unit.unit_temperature_c > span");
+                    var weatherMinsk = elementMinsk.TextContent;
+                    await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
+                                                       $"{weatherMinsk}");
+                    break;
+                case "Могилев":
+                    var htmlMogilev = await client.GetStringAsync("https://www.gismeteo.by/weather-mogilev-4251/");
+                    var documentMogilev = await htmlParser.ParseDocumentAsync(htmlMogilev);
+                    var elementMogilev = documentMogilev.QuerySelector("body > section > div.content_wrap > div > div.main > div > div.__frame_sm > div.forecast_frame.hw_wrap > div.tabs._center > a:nth-child(1) > div > div.tab-content > div.tab-weather > div.js_meas_container.temperature.tab-weather__value > span.unit.unit_temperature_c > span");
+                    var weatherMogilev = elementMogilev.TextContent;
+                    await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
+                                                       $"{weatherMogilev}");
+                    break;
+                case "Гомель":
+                    var htmlGomel = await client.GetStringAsync("https://www.gismeteo.by/weather-gomel-4918/");
+                    var documentGomel = await htmlParser.ParseDocumentAsync(htmlGomel);
+                    var elementGomel = documentGomel.QuerySelector("body > section > div.content_wrap > div > div.main > div > div.__frame_sm > div.forecast_frame.hw_wrap > div.tabs._center > a:nth-child(1) > div > div.tab-content > div.tab-weather > div.js_meas_container.temperature.tab-weather__value > span.unit.unit_temperature_c > span");
+                    var weatherGomel = elementGomel.TextContent;
+                    await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
+                                                       $"{weatherGomel}");
+                    break;
+                case "Гродно":
+                    var htmlGrodno = await client.GetStringAsync("https://www.gismeteo.by/weather-grodno-4243/");
+                    var documentGrodno = await htmlParser.ParseDocumentAsync(htmlGrodno);
+                    var elementGrodno = documentGrodno.QuerySelector("body > section > div.content_wrap > div > div.main > div > div.__frame_sm > div.forecast_frame.hw_wrap > div.tabs._center > a:nth-child(1) > div > div.tab-content > div.tab-weather > div.js_meas_container.temperature.tab-weather__value > span.unit.unit_temperature_c > span");
+                    var weatherGrodno = elementGrodno.TextContent;
+                    await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
+                                                       $"{weatherGrodno}");
+                    break;
+                case "Брест":
+                    var htmlBrest = await client.GetStringAsync("https://www.gismeteo.by/weather-brest-4912/");
+                    var documentBrest = await htmlParser.ParseDocumentAsync(htmlBrest);
+                    var elementBrest = documentBrest.QuerySelector("body > section > div.content_wrap > div > div.main > div > div.__frame_sm > div.forecast_frame.hw_wrap > div.tabs._center > a:nth-child(1) > div > div.tab-content > div.tab-weather > div.js_meas_container.temperature.tab-weather__value > span.unit.unit_temperature_c > span");
+                    var weatherBrest = elementBrest.TextContent;
+                    await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
+                                                       $"{weatherBrest}");
+                    break;
+                case "Витебск":
+                    var htmlVitebsk = await client.GetStringAsync("https://www.gismeteo.by/weather-vitebsk-4218/");
+                    var documentVitebsk = await htmlParser.ParseDocumentAsync(htmlVitebsk);
+                    var elementVitebsk = documentVitebsk.QuerySelector("body > section > div.content_wrap > div > div.main > div > div.__frame_sm > div.forecast_frame.hw_wrap > div.tabs._center > a:nth-child(1) > div > div.tab-content > div.tab-weather > div.js_meas_container.temperature.tab-weather__value > span.unit.unit_temperature_c > span");
+                    var weatherVitebsk = elementVitebsk.TextContent;
+                    await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
+                                                       $"{weatherVitebsk}");
                     break;
                 default:
                     break;
