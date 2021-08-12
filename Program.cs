@@ -130,7 +130,7 @@ namespace nikTelegramWeather_bot
         // Process Inline Keyboard callback data
         private static async Task BotOnCallbackQueryReceived(CallbackQuery callbackQuery)
         {
-            string BotMessage = "";
+            
             var htmlParser = new HtmlParser();
             HttpClient client = new HttpClient();
             
@@ -227,8 +227,6 @@ namespace nikTelegramWeather_bot
                     
             }
 
-            await Bot.SendTextMessageAsync(callbackQuery.Message.Chat.Id,
-                                                       $"{BotMessage}");
         }
 
       
